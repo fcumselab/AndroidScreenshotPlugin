@@ -1,4 +1,4 @@
 <?jelly escape-by-default='true'?>
 <div>
-    TODO
+    Take screenshots by gradle test depend on Android Emulator.
 </div>

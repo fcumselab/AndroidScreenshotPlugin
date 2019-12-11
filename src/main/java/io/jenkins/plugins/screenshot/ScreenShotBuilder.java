@@ -19,24 +19,13 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.util.ArrayList;
 
 public class ScreenShotBuilder extends Builder implements SimpleBuildStep {
-  private final String projectName;
-  String filePath = "D:\\Temp\\AndroidManifest.xml";
 
   @DataBoundConstructor
-  public ScreenShotBuilder(String projectName) {
-    this.projectName = projectName;
-  }
-
-  public String getProjectName() {
-    return this.projectName;
-  }
+  public ScreenShotBuilder() { }
 
   public String getPackageName(Document doc) {
     String packageName = doc.getElementsByTagName("manifest").item(0).getAttributes().getNamedItem("package").getNodeValue();
@@ -66,8 +55,22 @@ public class ScreenShotBuilder extends Builder implements SimpleBuildStep {
     return activityNames;
   }
 
-  public static void generateTestFile(String packageName, ArrayList<String> activitys) throws FileNotFoundException, UnsupportedEncodingException {
-    PrintWriter writer = new PrintWriter("D:\\Temp\\SpoonTest.java", "UTF-8");
+  public void generateTestFile(String targetPath, String packageName, ArrayList<String> activitys, TaskListener listener)
+          throws IOException, InterruptedException {
+
+//    File fileFolder = new File(targetPath);
+    File file = new File(targetPath.replace("file:","") + "SpoonTest.java");
+
+//    if(!fileFolder.exists()){
+//      fileFolder.mkdirs();
+//    }
+
+    if(file.createNewFile()) {
+      listener.getLogger().println(targetPath + "is created");
+    } else {
+      listener.getLogger().println(targetPath + "is not created");
+    }
+    PrintWriter writer = new PrintWriter(file, "UTF-8");
     // package
     writer.println("package " + packageName + ";");
 
@@ -113,14 +116,24 @@ public class ScreenShotBuilder extends Builder implements SimpleBuildStep {
     DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
     DocumentBuilder docBuilder = null;
     try {
+      listener.getLogger().println("--------------------------Android Screenshot Start--------------------------");
       docBuilder = docFactory.newDocumentBuilder();
-      Document doc = docBuilder.parse("D:\\Temp\\AndroidManifest.xml");
-
-      paserXML(doc);
+      String androidManifestPath = workspace.toURI().toString() + "app/src/main/AndroidManifest.xml";
+      listener.getLogger().println("ProjectRoot: " + workspace.toURI().toString());
+      listener.getLogger().println("AndroidManifestPath: " + androidManifestPath);
+      Document doc = docBuilder.parse(androidManifestPath);
+      // Step1: get package name
       String packageName = getPackageName(doc);
+      listener.getLogger().println("PackageName: " + packageName);
+      // Stemp2: find all activitys
       ArrayList<String> activitys = paserXML(doc);
-      generateTestFile(packageName, activitys);
-
+      activitys.forEach((name)->listener.getLogger().println("Activitys: " + name));
+      // Stemp3: generate test file. default name:SpoonTest.java
+      String testTarget = workspace.toURI().toString() + "app/src/androidTest/java/" +
+              packageName.replace(".", "/") + "/";
+      listener.getLogger().println("TestTargetPath: " + testTarget);
+      generateTestFile(testTarget, packageName, activitys, listener);
+      listener.getLogger().println("--------------------------Android Screenshot Finish--------------------------");
     } catch (ParserConfigurationException | SAXException e) {
       e.printStackTrace();
     }
@@ -137,9 +150,7 @@ public class ScreenShotBuilder extends Builder implements SimpleBuildStep {
 
     @Override
     public String getDisplayName() {
-      return "Selenium Screenshot Method";
+      return "Android Screenshot";
     }
-
   }
-
 }
