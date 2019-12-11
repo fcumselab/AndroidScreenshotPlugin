@@ -66,9 +66,9 @@ public class ScreenShotBuilder extends Builder implements SimpleBuildStep {
 //    }
 
     if(file.createNewFile()) {
-      listener.getLogger().println(targetPath + "is created");
+      listener.getLogger().println(targetPath + " is created");
     } else {
-      listener.getLogger().println(targetPath + "is not created");
+      listener.getLogger().println(targetPath + " is not created");
     }
     PrintWriter writer = new PrintWriter(file, "UTF-8");
     // package
