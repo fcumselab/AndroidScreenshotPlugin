@@ -116,7 +116,7 @@ public class ScreenShotBuilder extends Builder implements SimpleBuildStep {
     DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
     DocumentBuilder docBuilder = null;
     try {
-      listener.getLogger().println("--------------------------Android Screenshot Start--------------------------");
+      listener.getLogger().println("--------------------------Generate Android Screenshot TestFile Start--------------------------");
       docBuilder = docFactory.newDocumentBuilder();
       String androidManifestPath = workspace.toURI().toString() + "app/src/main/AndroidManifest.xml";
       listener.getLogger().println("ProjectRoot: " + workspace.toURI().toString());
@@ -133,7 +133,7 @@ public class ScreenShotBuilder extends Builder implements SimpleBuildStep {
               packageName.replace(".", "/") + "/";
       listener.getLogger().println("TestTargetPath: " + testTarget);
       generateTestFile(testTarget, packageName, activitys, listener);
-      listener.getLogger().println("--------------------------Android Screenshot Finish--------------------------");
+      listener.getLogger().println("--------------------------Generate Android Screenshot TestFile Finish--------------------------");
     } catch (ParserConfigurationException | SAXException e) {
       e.printStackTrace();
     }
