@@ -125,10 +125,10 @@ public class ScreenShotBuilder extends Builder implements SimpleBuildStep {
       // Step1: get package name
       String packageName = getPackageName(doc);
       listener.getLogger().println("PackageName: " + packageName);
-      // Stemp2: find all activitys
+      // Step2: find all activitys
       ArrayList<String> activitys = paserXML(doc);
       activitys.forEach((name)->listener.getLogger().println("Activitys: " + name));
-      // Stemp3: generate test file. default name:SpoonTest.java
+      // Step3: generate test file. default name:SpoonTest.java
       String testTarget = workspace.toURI().toString() + "app/src/androidTest/java/" +
               packageName.replace(".", "/") + "/";
       listener.getLogger().println("TestTargetPath: " + testTarget);
