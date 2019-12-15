@@ -1,4 +1,4 @@
-package io.jenkins.plugins.screenshot;
+package io.jenkins.plugins.androidScreenshot;
 
 import hudson.Extension;
 import hudson.FilePath;
@@ -13,7 +13,6 @@ import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -22,10 +21,10 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.util.ArrayList;
 
-public class ScreenShotBuilder extends Builder implements SimpleBuildStep {
+public class AndroidScreenShotBuilder extends Builder implements SimpleBuildStep {
 
   @DataBoundConstructor
-  public ScreenShotBuilder() { }
+  public AndroidScreenShotBuilder() { }
 
   public String getPackageName(Document doc) {
     String packageName = doc.getElementsByTagName("manifest").item(0).getAttributes().getNamedItem("package").getNodeValue();
